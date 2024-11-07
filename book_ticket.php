@@ -93,13 +93,13 @@ $event = $stmt->fetch(PDO::FETCH_ASSOC);
     <h1>Book Ticket for <?= htmlspecialchars($event['event_name']) ?></h1>
     <form action="confirm_ticket.php" method="POST">
         <input type="hidden" name="event_id" value="<?= $event['event_id'] ?>">
+        <input type="hidden" name="user_id" value="<?= $_attendees['user_id'] ?>">
         <label>Name:</label>
         <input type="text" name="name" required>
         <label>Email:</label>
         <input type="email" name="email" required>
         <label>Number of Tickets:</label>
         <input type="number" name="no_of_tickets" id="numTickets" min="1" required oninput="calculateTotal()">
-        
         <!-- Display total amount dynamically -->
         <div class="total-amount" id="totalAmount">Total Amount: Rs. 0</div>
         

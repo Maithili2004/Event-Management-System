@@ -55,6 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         a:hover {
             opacity: 0.9;
         }
+        .home-button {
+            padding: 10px;
+            width: 60%;
+            margin-top: 20px;
+            margin-left:300px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <a href="payment_page.php?event_id=<?= htmlspecialchars($event_id) ?>" class="error">Retry Payment</a>
         <?php endif; ?>
     </div>
+    <a href="genres.php" class="home-button">Home</a>
 
 </body>
 </html>

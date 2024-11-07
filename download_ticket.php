@@ -32,13 +32,14 @@ if (isset($_GET['attendee_id']) && isset($_GET['event_id'])) {
 
         $pdf->SetFont('helvetica', '', 12);
         $pdf->Ln(10);
+        $pdf->Cell(0, 10, 'Attendee: ' . $attendee['attendee_name'], 0, 1);
+        $pdf->Cell(0, 10, 'Email: ' . $attendee['email'], 0, 1);
+        $pdf->Ln(10);
         $pdf->Cell(0, 10, 'Event: ' . $event['event_name'], 0, 1);
         $pdf->Cell(0, 10, 'Date: ' . $event['event_date'], 0, 1);
         $pdf->Cell(0, 10, 'Venue: ' . $event['venue'], 0, 1);
         $pdf->Cell(0, 10, 'ticket_price: Rs.' . $event['ticket_price'], 0, 1);
         $pdf->Ln(10);
-        $pdf->Cell(0, 10, 'Attendee: ' . $attendee['attendee_name'], 0, 1);
-        $pdf->Cell(0, 10, 'Email: ' . $attendee['email'], 0, 1);
         $pdf->Ln(10);
         $pdf->Cell(0, 10, 'Thank you for your booking!', 0, 1, 'C');
 
