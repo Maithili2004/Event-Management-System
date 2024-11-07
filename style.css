@@ -48,7 +48,7 @@
 /* Lighter and softer gradient background for the event page */
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #f8c8c8, #f1e2e2); /* Soft pink to light peach/pinkish tones */
+    background: #b4cccf;
     color: #333;
 }
 
@@ -72,7 +72,7 @@ header {
     padding: 15px;
     border-radius: 10px;
     overflow: hidden;
-    background: #fff;
+    background:#b4cccf;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -192,7 +192,7 @@ body {
     /* Lighter and more gradient background for the event page */
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, hsl(339, 86%, 81%), #f1c6c3); /* Lighter and softer gradient */
+    background: #b4cccf;
     color: #333;
 }
 }

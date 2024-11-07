@@ -1,6 +1,9 @@
 <?php
 include 'dbconnection.php';
 
+$searchTerm = '';
+$events = [];
+
 if (isset($_GET['genre_id'])) {
     $genre_id = $_GET['genre_id'];
 
@@ -15,10 +18,22 @@ if (isset($_GET['genre_id'])) {
         die("Invalid genre ID.");
     }
 
-    // Fetch events based on the selected genre
-    $sqlEvents = "SELECT * FROM events WHERE genre = :genre";
-    $stmtEvents = $pdo->prepare($sqlEvents);
-    $stmtEvents->execute(['genre' => $genre]);
+    // Check if a search term is provided
+    if (isset($_GET['search'])) {
+        $searchTerm = $_GET['search'];
+        $sqlEvents = "SELECT * FROM events WHERE genre = :genre AND event_name LIKE :searchTerm";
+        $stmtEvents = $pdo->prepare($sqlEvents);
+        $stmtEvents->execute([
+            'genre' => $genre,
+            'searchTerm' => "%" . $searchTerm . "%" // Adding wildcards for search
+        ]);
+    } else {
+        // Fetch events based on the selected genre without search filter
+        $sqlEvents = "SELECT * FROM events WHERE genre = :genre";
+        $stmtEvents = $pdo->prepare($sqlEvents);
+        $stmtEvents->execute(['genre' => $genre]);
+    }
+
     $events = $stmtEvents->fetchAll(PDO::FETCH_ASSOC);
 } else {
     die("Genre not specified.");
@@ -36,6 +51,18 @@ if (isset($_GET['genre_id'])) {
         }
         h1 {
             text-align: center;
+        }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-bar {
+            padding: 8px;
+            font-size: 14px;
+            width: 50%;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
         }
         .back-link, .book-ticket-button {
             padding: 8px 10px;
@@ -60,6 +87,16 @@ if (isset($_GET['genre_id'])) {
 </head>
 <body>
     <h1>Events in <?= htmlspecialchars($genre) ?></h1>
+
+    <!-- Search Form -->
+    <div class="search-container">
+        <form method="GET" action="">
+            <input type="hidden" name="genre_id" value="<?= htmlspecialchars($genre_id) ?>">
+            <input type="text" name="search" class="search-bar" placeholder="Search events by name..." value="<?= htmlspecialchars($searchTerm) ?>">
+            <button type="submit" class="book-ticket-button">Search</button>
+        </form>
+    </div>
+
     <ul>
         <?php if (!empty($events)): ?>
             <?php foreach ($events as $event): ?>
@@ -76,6 +113,7 @@ if (isset($_GET['genre_id'])) {
             <li>No events found for this genre.</li>
         <?php endif; ?>
     </ul>
+
     <a href="genres.php" class="back-link">Back to Genres</a>
 </body>
 </html>

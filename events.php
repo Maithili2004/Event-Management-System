@@ -19,7 +19,7 @@ session_start();
     <nav class="top-nav">
         <div class="logo-container">
             <a href="events.php">
-                <img src="images/Eventsy.png" alt="Eventsy Logo" class="logo">
+                <img src="images\Eventsy.jpg" alt="Eventsy Logo" class="logo">
             </a>
         </div>
         <div class="nav-buttons">

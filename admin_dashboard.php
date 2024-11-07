@@ -18,6 +18,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         <div class="mt-4">
             <a href="add_event.php" class="btn btn-success me-2"><i class="bi bi-plus-circle"></i> Add Event</a>
             <a href="list_events.php" class="btn btn-warning me-2"><i class="bi bi-pencil-square"></i> Manage Events</a>
+            <a href="total_ticketsale.php" class="btn btn-success me-2"><i class="bi bi-circle"></i> Check Ticket Sale</a>
+            <a href="display_booked_attendees.php" class="btn btn-warning me-2"><i class="bi bi-circle"></i> Check Attendee List</a>
             <a href="logout.php" class="btn btn-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
         </div>
     </div>

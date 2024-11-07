@@ -98,6 +98,20 @@ if (isset($_POST['event_id'])) {
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+        .home-button {
+            padding: 10px;
+            width: 60%;
+            margin-top: 20px;
+            margin-left:300px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -160,5 +174,6 @@ if (isset($_POST['event_id'])) {
     <?php elseif (isset($selected_event_id)): ?>
         <p style="text-align: center;">No attendees found for this event and genre.</p>
     <?php endif; ?>
+    <a href="admin_dashboard.php" class="home-button">Go To Dashboard</a>
 </body>
 </html>

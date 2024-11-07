@@ -110,6 +110,20 @@ $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .back-link:hover {
             background-color: #0056b3;
         }
+        .home-button {
+            padding: 10px;
+            width: 60%;
+            margin-top: 20px;
+            margin-left:300px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -199,5 +213,6 @@ $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </form>
     <a href="list_events.php" class="back-link">Go to Event List</a>
+    <a href="admin_dashboard.php" class="home-button">Go To Dashboard</a>
 </body>
 </html>

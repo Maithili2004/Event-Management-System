@@ -1,57 +1,55 @@
 <?php
-include 'dbconnection.php';  // Include the PDO connection file
-session_start();
+include 'dbconnection.php';
 
-// Ensure the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php"); // Redirect to login if not logged in
+// Start the session to get the logged-in user ID
+session_start();
+$user_id = $_SESSION['user_id'] ?? null; // Make sure user_id is stored in session when logging in
+
+if (!$user_id) {
+    echo "Please log in to view your bookings.";
     exit;
 }
 
-// Retrieve the user ID from the session
-$user_id = $_SESSION['user_id'];
-
-// Prepare the SQL query to get bookings made by the logged-in user
-$sql = "SELECT attendees.attendee_id, attendees.attendee_name, events.event_name, events.event_date
-        FROM attendees
-        JOIN events ON attendees.event_id = events.event_id
-        WHERE attendees.user_id = :user_id";
-
-// Prepare and execute the query
+// Fetch bookings for the logged-in user
+$sql = "
+    SELECT e.event_name, e.event_date, e.venue, e.start_time, e.end_time, a.attendee_name, a.email
+    FROM attendees a
+    INNER JOIN events e ON a.event_id = e.event_id
+    WHERE a.user_id = :user_id
+";
 $stmt = $pdo->prepare($sql);
-$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT); // Bind the user ID parameter
-$stmt->execute();
-
-// Fetch results
+$stmt->execute(['user_id' => $user_id]);
 $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
 
+if (empty($bookings)) {
+    echo "<p>No bookings found.</p>";
+} else {
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Bookings</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #f9f9f9;
             padding: 20px;
-            background-color: #f4f4f4;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         h1 {
             color: #333;
             text-align: center;
         }
         table {
-            width: 80%;
-            margin: 0 auto;
-            background-color: white;
+            width: 100%;
             border-collapse: collapse;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
         }
         th, td {
-            padding: 12px;
+            padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
@@ -59,44 +57,34 @@ $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
             background-color: #007bff;
             color: white;
         }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        td {
-            color: #555;
-        }
-        p {
-            text-align: center;
-            font-size: 18px;
-        }
     </style>
 </head>
 <body>
     <h1>My Bookings</h1>
-    
-    <?php if (count($bookings) > 0): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Booking ID</th>
-                    <th>Attendee Name</th>
-                    <th>Event Name</th>
-                    <th>Event Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($bookings as $row): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row["attendee_id"]); ?></td>
-                        <td><?php echo htmlspecialchars($row["attendee_name"]); ?></td>
-                        <td><?php echo htmlspecialchars($row["event_name"]); ?></td>
-                        <td><?php echo htmlspecialchars($row["event_date"]); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <p>No bookings found.</p>
-    <?php endif; ?>
+    <table>
+        <tr>
+            <th>Event Name</th>
+            <th>Date</th>
+            <th>Venue</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Your Name</th>
+            <th>Email</th>
+        </tr>
+        <?php foreach ($bookings as $booking): ?>
+        <tr>
+            <td><?= htmlspecialchars($booking['event_name']) ?></td>
+            <td><?= htmlspecialchars($booking['event_date']) ?></td>
+            <td><?= htmlspecialchars($booking['venue']) ?></td>
+            <td><?= htmlspecialchars($booking['start_time']) ?></td>
+            <td><?= htmlspecialchars($booking['end_time']) ?></td>
+            <td><?= htmlspecialchars($booking['attendee_name']) ?></td>
+            <td><?= htmlspecialchars($booking['email']) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
 </body>
 </html>
+<?php
+}
+?>

@@ -16,7 +16,7 @@ $event = $stmt->fetch(PDO::FETCH_ASSOC);
             font-family: Arial, sans-serif;
             max-width: 600px;
             margin: 20px auto;
-            background-color: #f4f4f4;
+            background-color:#b4cccf;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -93,7 +93,7 @@ $event = $stmt->fetch(PDO::FETCH_ASSOC);
     <h1>Book Ticket for <?= htmlspecialchars($event['event_name']) ?></h1>
     <form action="confirm_ticket.php" method="POST">
         <input type="hidden" name="event_id" value="<?= $event['event_id'] ?>">
-        <input type="hidden" name="user_id" value="<?= $_attendees['user_id'] ?>">
+        <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?? '' ?>">
         <label>Name:</label>
         <input type="text" name="name" required>
         <label>Email:</label>
@@ -105,6 +105,6 @@ $event = $stmt->fetch(PDO::FETCH_ASSOC);
         
         <button type="submit">Do Payment</button>
     </form>
-    <a href="events_by_genre.php?genre_id=<?= $event['genre_id'] ?>" class="back-link">Back to Events</a>
+    <a href="genres.php" class="back-link">Back to Events</a>
 </body>
 </html>

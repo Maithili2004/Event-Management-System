@@ -1,16 +1,37 @@
 <?php
 include 'dbconnection.php';
 
+// Start the session to get the logged-in user ID
+session_start();
+$user_id = $_SESSION['user_id'] ?? null; // Make sure user_id is stored in session when logging in
+
+if (!$user_id) {
+    echo "Please log in to confirm your booking.";
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // First step: Store attendee details
+    // Fetching data from the form
     $event_id = $_POST['event_id'];
-    $name = $_POST['name'];
+    $attendee_name = $_POST['name'];
     $email = $_POST['email'];
 
-    $sql = "INSERT INTO attendees (attendee_name, email) VALUES (:name, :email)";
+    // Insert the attendee details, including the user_id
+    $sql = "INSERT INTO attendees (attendee_name, email, user_id, event_id) VALUES (:attendee_name, :email, :user_id, :event_id)";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(['name' => $name, 'email' => $email]);
+    $stmt->execute([
+        'attendee_name' => $attendee_name,
+        'email' => $email,
+        'user_id' => $user_id, // Adding user_id to the insert
+        'event_id' => $event_id
+    ]);
+    
+    // Get the last inserted attendee ID
     $attendee_id = $pdo->lastInsertId();
+    
+    // Redirect or show success message after successful insertion
+    //echo "Booking confirmed! Your attendee ID is: " . $attendee_id;
+    // You can redirect to the payment page here if required
 }
 ?>
 
@@ -57,6 +78,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         button:hover {
             background-color: blue;
         }
+        .back-link, .book-ticket-button {
+            padding: 8px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            display: inline-block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link:hover, .book-ticket-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -71,6 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <label><input type="radio" name="payment_method" value="net_banking" required> Net Banking</label>
 
         <button type="submit">Proceed to Payment</button>
+        <a href="genres.php" class="back-link">cancel Payment</a>
+</body>
     </form>
 </body>
 </html>

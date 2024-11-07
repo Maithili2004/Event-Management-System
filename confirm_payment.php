@@ -55,6 +55,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         button:hover {
             background-color: blue;
         }
+        .back-link, .book-ticket-button {
+            padding: 8px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            display: inline-block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link:hover, .book-ticket-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -99,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
         <button type="submit">Confirm Payment</button>
+        <a href="genres.php" class="back-link">cancel Payment</a>
     </form>
 </body>
 </html>

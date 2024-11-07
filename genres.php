@@ -34,6 +34,20 @@ $genres = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .genre-button:hover {
             background-color: #0056b3;
         }
+        .home-button {
+            padding: 10px;
+            width: 60%;
+            margin-top: 20px;
+            margin-left:300px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -43,5 +57,6 @@ $genres = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?= htmlspecialchars($genre['genre_name']) ?>
         </a>
     <?php endforeach; ?>
+    <a href="user_dashboard.php" class="home-button">Go To Dashboard</a>
 </body>
 </html>
