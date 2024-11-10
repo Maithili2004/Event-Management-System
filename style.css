@@ -48,7 +48,10 @@
 /* Lighter and softer gradient background for the event page */
 body {
     font-family: Arial, sans-serif;
-    background: #b4cccf;
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: #333;
 }
 
@@ -180,7 +183,7 @@ header {
 
 /* Styling for the darker shade of the extra buttons at the bottom */
 .extra-buttons .button {
-    background-color: #d94c5b; /* Darker shade of red */
+    background-color: #f70820; /* Darker shade of red */
 }
 
 .extra-buttons .button:hover {

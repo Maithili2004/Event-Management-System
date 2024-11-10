@@ -1,22 +1,32 @@
 <?php
+session_start(); // Make sure session is started
 include 'dbconnection.php';
 
+// Fetch the event details from the database
 $event_id = $_GET['event_id'];
 $sql = "SELECT * FROM events WHERE event_id = :event_id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['event_id' => $event_id]);
 $event = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Book Ticket</title>
     <style>
+        /* Your styles for the page */
+        html {
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
         body {
             font-family: Arial, sans-serif;
             max-width: 600px;
             margin: 20px auto;
-            background-color:#b4cccf;
+            background-color:#f4f4f4;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -30,9 +40,7 @@ $event = $stmt->fetch(PDO::FETCH_ASSOC);
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"],
-        input[type="email"],
-        input[type="number"] {
+        input[type="text"], input[type="email"], input[type="number"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -78,7 +86,7 @@ $event = $stmt->fetch(PDO::FETCH_ASSOC);
     </style>
     <script>
         function calculateTotal() {
-            const pricePerTicket = <?= json_encode($event['ticket_price'] ?? 0) ?>; // Get price from PHP
+            const pricePerTicket = <?= json_encode($event['ticket_price'] ?? 0) ?>; // Fetch the ticket price from PHP
             const numTickets = document.getElementById("numTickets").value;
 
             // Ensure the value is a valid number before calculation
@@ -94,15 +102,19 @@ $event = $stmt->fetch(PDO::FETCH_ASSOC);
     <form action="confirm_ticket.php" method="POST">
         <input type="hidden" name="event_id" value="<?= $event['event_id'] ?>">
         <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?? '' ?>">
+
         <label>Name:</label>
         <input type="text" name="name" required>
+
         <label>Email:</label>
         <input type="email" name="email" required>
+
         <label>Number of Tickets:</label>
         <input type="number" name="no_of_tickets" id="numTickets" min="1" required oninput="calculateTotal()">
+
         <!-- Display total amount dynamically -->
         <div class="total-amount" id="totalAmount">Total Amount: Rs. 0</div>
-        
+
         <button type="submit">Do Payment</button>
     </form>
     <a href="genres.php" class="back-link">Back to Events</a>

@@ -20,25 +20,39 @@ if (isset($_GET['event_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $event_name = $_POST['event_name'];
     $event_date = $_POST['event_date'];
-    $event_time = $_POST['event_time'];
+    $start_hour = $_POST['start_hour'];
+    $start_minute = $_POST['start_minute'];
+    $start_am_pm = $_POST['start_am_pm'];
+    $end_hour = $_POST['end_hour'];
+    $end_minute = $_POST['end_minute'];
+    $end_am_pm = $_POST['end_am_pm'];
     $venue = $_POST['venue'];
     $ticket_price = $_POST['ticket_price'];
     $organizer_id = $_POST['organizer_id'];
-    $genre = $_POST['genre'];  // Capture genre from form
+    $genre = $_POST['genre'];
+
+    // Convert 12-hour format to 24-hour format
+    $start_time = ($start_am_pm == 'PM' && $start_hour != 12) ? ($start_hour + 12) : $start_hour;
+    $end_time = ($end_am_pm == 'PM' && $end_hour != 12) ? ($end_hour + 12) : $end_hour;
+
+    $start_time = sprintf('%02d:%02d', $start_time, $start_minute);
+    $end_time = sprintf('%02d:%02d', $end_time, $end_minute);
 
     // Update event details
-    $sql = "UPDATE events SET event_name = :event_name, event_date = :event_date, event_time = :event_time, venue = :venue, ticket_price = :ticket_price, organizer_id = :organizer_id, genre = :genre WHERE event_id = :event_id";
+    $sql = "UPDATE events SET event_name = :event_name, event_date = :event_date, start_time = :start_time, end_time = :end_time, venue = :venue, ticket_price = :ticket_price, organizer_id = :organizer_id, genre = :genre WHERE event_id = :event_id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         'event_name' => $event_name,
         'event_date' => $event_date,
-        'event_time' => $event_time,
+        'start_time' => $start_time,
+        'end_time' => $end_time,
         'venue' => $venue,
         'ticket_price' => $ticket_price,
         'organizer_id' => $organizer_id,
-        'genre' => $genre,  // Bind genre parameter
+        'genre' => $genre,
         'event_id' => $event_id
     ]);
+
     header("Location: list_events.php");
     exit;
 }
@@ -49,6 +63,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,12 +77,18 @@ $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             display: block;
             margin: 10px 0 5px;
         }
-        input, select {
+        input {
             padding: 8px;
             width: 100%;
             max-width: 400px;
             margin-bottom: 15px;
         }
+        select {
+    padding: 5px;
+    width: 60px; /* Smaller width for the dropdown */
+    margin-bottom: 15px;
+}
+
         button {
             padding: 10px 15px;
             background-color: #007bff;
@@ -106,8 +127,45 @@ $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <label for="event_date">Event Date:</label>
         <input type="date" name="event_date" id="event_date" value="<?= htmlspecialchars($event['event_date']) ?>" required>
 
-        <label for="event_time">Event Time:</label>
-        <input type="time" name="event_time" id="event_time" value="<?= htmlspecialchars($event['event_time']) ?>" required>
+        <label for="start_time">Start Time:</label>
+        <select name="start_hour" id="start_hour" required>
+            <?php for ($i = 1; $i <= 12; $i++): ?>
+                <option value="<?= $i ?>" <?= $i == (int)date('g', strtotime($event['start_time'])) ? 'selected' : '' ?>>
+                    <?= $i ?>
+                </option>
+            <?php endfor; ?>
+        </select>
+        <select name="start_minute" id="start_minute" required>
+            <?php for ($i = 0; $i < 60; $i += 5): ?>
+                <option value="<?= str_pad($i, 2, '0', STR_PAD_LEFT) ?>" <?= str_pad($i, 2, '0', STR_PAD_LEFT) == date('i', strtotime($event['start_time'])) ? 'selected' : '' ?>>
+                    <?= str_pad($i, 2, '0', STR_PAD_LEFT) ?>
+                </option>
+            <?php endfor; ?>
+        </select>
+        <select name="start_am_pm" id="start_am_pm" required>
+            <option value="AM" <?= date('A', strtotime($event['start_time'])) == 'AM' ? 'selected' : '' ?>>AM</option>
+            <option value="PM" <?= date('A', strtotime($event['start_time'])) == 'PM' ? 'selected' : '' ?>>PM</option>
+        </select>
+
+        <label for="end_time">End Time:</label>
+        <select name="end_hour" id="end_hour" required>
+            <?php for ($i = 1; $i <= 12; $i++): ?>
+                <option value="<?= $i ?>" <?= $i == (int)date('g', strtotime($event['end_time'])) ? 'selected' : '' ?>>
+                    <?= $i ?>
+                </option>
+            <?php endfor; ?>
+        </select>
+        <select name="end_minute" id="end_minute" required>
+            <?php for ($i = 0; $i < 60; $i += 5): ?>
+                <option value="<?= str_pad($i, 2, '0', STR_PAD_LEFT) ?>" <?= str_pad($i, 2, '0', STR_PAD_LEFT) == date('i', strtotime($event['end_time'])) ? 'selected' : '' ?>>
+                    <?= str_pad($i, 2, '0', STR_PAD_LEFT) ?>
+                </option>
+            <?php endfor; ?>
+        </select>
+        <select name="end_am_pm" id="end_am_pm" required>
+            <option value="AM" <?= date('A', strtotime($event['end_time'])) == 'AM' ? 'selected' : '' ?>>AM</option>
+            <option value="PM" <?= date('A', strtotime($event['end_time'])) == 'PM' ? 'selected' : '' ?>>PM</option>
+        </select>
 
         <label for="venue">Venue:</label>
         <input type="text" name="venue" id="venue" value="<?= htmlspecialchars($event['venue']) ?>" required>

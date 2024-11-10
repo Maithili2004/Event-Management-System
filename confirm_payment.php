@@ -18,6 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin: 0;
             padding: 20px;
             background-color: #f4f4f4;
+            background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
         }
         h1 {
             color: #333;

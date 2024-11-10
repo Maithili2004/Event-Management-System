@@ -9,7 +9,17 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
-
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-image: url('images/background.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed; 
+}
+</style>
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Admin Dashboard</h1>

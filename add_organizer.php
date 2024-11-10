@@ -21,10 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #b4cccf;
+            background-color: #f4f4f4;
+            background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
         }
         h1 {
             color: #333;
+            text-align: center;
         }
         form {
             background: white;

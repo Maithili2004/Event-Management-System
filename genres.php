@@ -15,6 +15,10 @@ $genres = $stmt->fetchAll(PDO::FETCH_ASSOC);
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
         }
         h1 {
             text-align: center;

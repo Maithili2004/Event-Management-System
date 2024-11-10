@@ -57,6 +57,20 @@ if (empty($bookings)) {
             background-color: #007bff;
             color: white;
         }
+        .home-button {
+            padding: 5px;
+            width: 30%;
+            margin-top: 10px;
+            margin-left:300px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -82,7 +96,8 @@ if (empty($bookings)) {
             <td><?= htmlspecialchars($booking['email']) ?></td>
         </tr>
         <?php endforeach; ?>
-    </table>
+    </table><br>
+    <a href="user_dashboard.php" class="home-button">Go To Dashboard</a>
 </body>
 </html>
 <?php

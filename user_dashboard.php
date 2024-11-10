@@ -9,7 +9,14 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
-
+<style>
+    body{
+        background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    }
+</style>
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">User Dashboard</h1>

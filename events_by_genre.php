@@ -48,6 +48,10 @@ if (isset($_GET['genre_id'])) {
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-image: url('images/background1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
         }
         h1 {
             text-align: center;

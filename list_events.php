@@ -1,16 +1,14 @@
 <?php
 include 'dbconnection.php';
 
+$searchTerm = '';
+$events = [];
+
 // Handle deletion if requested
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['event_id'])) {
     $event_id = $_GET['event_id'];
 
-    // Delete related records in event_attendees first
-    $deleteAttendeesSql = "DELETE FROM event_attendees WHERE event_id = :event_id";
-    $deleteAttendeesStmt = $pdo->prepare($deleteAttendeesSql);
-    $deleteAttendeesStmt->execute(['event_id' => $event_id]);
-
-    // Now delete the event from the events table
+    // Delete the event from the events table
     $deleteEventSql = "DELETE FROM events WHERE event_id = :event_id";
     $deleteEventStmt = $pdo->prepare($deleteEventSql);
     $deleteEventStmt->execute(['event_id' => $event_id]);
@@ -20,14 +18,26 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['event
     exit;
 }
 
+// Check if a search term is provided
+if (isset($_GET['search'])) {
+    $searchTerm = $_GET['search'];
+    $sql = "SELECT events.event_id, events.event_name, events.event_date, events.start_time, events.end_time, 
+                   events.genre, events.ticket_price, organizers.organizer_name 
+            FROM events 
+            JOIN organizers ON events.organizer_id = organizers.organizer_id
+            WHERE events.event_name LIKE :searchTerm";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['searchTerm' => "%" . $searchTerm . "%"]);
+} else {
+    // Fetch events with their organizers and genres
+    $sql = "SELECT events.event_id, events.event_name, events.event_date, events.start_time, events.end_time, 
+                   events.genre, events.ticket_price, organizers.organizer_name 
+            FROM events 
+            JOIN organizers ON events.organizer_id = organizers.organizer_id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+}
 
-// Fetch events along with their organizers and genres
-$sql = "SELECT events.event_id, events.event_name, events.event_date, events.start_time, events.end_time, events.genre, organizers.organizer_name 
-        FROM events 
-        JOIN organizers ON events.organizer_id = organizers.organizer_id";
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
 $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -40,6 +50,12 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
             font-family: Arial, sans-serif;
             margin: 20px auto;
             max-width: 800px;
+    padding: 20px;
+    background-image: url('images/background.jpg'); /* Specify the path to your image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the background image */
+    background-attachment: fixed; /* Makes the background fixed while scrolling */
+
         }
         h1 {
             text-align: center;
@@ -54,6 +70,7 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 10px;
             border: 1px solid #ccc;
             text-align: left;
+            background-color: #f4f4f4;
         }
         th {
             background-color: #f4f4f4;
@@ -82,10 +99,44 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .home-button:hover {
             background-color: #218838;
         }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-bar {
+            padding: 8px;
+            font-size: 14px;
+            width: 50%;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .search-button {
+            padding: 8px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .search-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <h1>Events</h1>
+
+    <!-- Search Form -->
+    <div class="search-container">
+        <form method="GET" action="">
+            <input type="text" name="search" class="search-bar" placeholder="Search events by name..." value="<?= htmlspecialchars($searchTerm) ?>">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+
     <table>
         <tr>
             <th>Event Name</th>
@@ -93,6 +144,7 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th>Start Time</th>
             <th>End Time</th>
             <th>Genre</th>
+            <th>Ticket Price</th> <!-- New column for Ticket Price -->
             <th>Organizer</th>
             <th>Actions</th>
         </tr>
@@ -100,9 +152,10 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <tr>
             <td><?= htmlspecialchars($event['event_name']) ?></td>
             <td><?= htmlspecialchars($event['event_date']) ?></td>
-            <td><?= htmlspecialchars($event['start_time']) ?></td> <!-- Display start time -->
-            <td><?= htmlspecialchars($event['end_time']) ?></td> <!-- Display end time -->
+            <td><?= htmlspecialchars($event['start_time']) ?></td>
+            <td><?= htmlspecialchars($event['end_time']) ?></td>
             <td><?= htmlspecialchars($event['genre']) ?></td>
+            <td><?= htmlspecialchars($event['ticket_price']) ?></td> <!-- Display Ticket Price -->
             <td><?= htmlspecialchars($event['organizer_name']) ?></td>
             <td>
                 <!-- Update and Delete buttons -->
@@ -119,7 +172,7 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     <!-- Button to go back to add_event.php (Home) -->
     <form action="add_event.php">
-        <button type="submit" class="home-button">Home</button>
+        <button type="submit" class="home-button">Add More Events</button>
     </form>
 </body>
 </html>

@@ -38,7 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?> <!-- Optional: If you create a common header -->
-
+<style>
+    body{
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    }
+</style>
 <body>
     <div class="container">
         <div class="form-container">

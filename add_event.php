@@ -39,6 +39,13 @@ $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <title>Add Event</title>
     <style>
+        html {
+        background-image: url('images/background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+}
+
         body {
             font-family: Arial, sans-serif;
             max-width: 600px;
