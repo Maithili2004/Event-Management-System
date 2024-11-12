@@ -11,7 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $organizer_id = $_POST['organizer_id'];
     $genre = $_POST['genre']; // Capture genre from the form
 
-    $sql = "INSERT INTO events (event_name, event_date, start_time, end_time, venue, ticket_price, organizer_id, genre) VALUES (:event_name, :event_date, :start_time, :end_time, :venue, :ticket_price, :organizer_id, :genre)";
+    $sql = "INSERT INTO events (event_name, event_date, start_time, end_time, venue, ticket_price, organizer_id, genre)
+     VALUES (:event_name, :event_date, :start_time, :end_time, :venue, :ticket_price, :organizer_id, :genre)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         'event_name' => $event_name,

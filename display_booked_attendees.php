@@ -22,7 +22,7 @@ if (isset($_POST['genre'])) {
 if (isset($_POST['event_id'])) {
     $selected_event_id = $_POST['event_id'];
 
-    // Use UNION to fetch attendees directly based on event and genre
+    
     $sql_attendees = "
        SELECT a.attendee_id, a.attendee_name, a.email, e.event_name, e.genre
        FROM attendees a

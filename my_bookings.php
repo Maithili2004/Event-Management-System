@@ -30,6 +30,12 @@ if (empty($bookings)) {
 <head>
     <title>My Bookings</title>
     <style>
+        html {
+        background-image: url('images/background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+       }
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;

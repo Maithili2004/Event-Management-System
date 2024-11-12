@@ -34,12 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Convert 12-hour format to 24-hour format
     $start_time = ($start_am_pm == 'PM' && $start_hour != 12) ? ($start_hour + 12) : $start_hour;
     $end_time = ($end_am_pm == 'PM' && $end_hour != 12) ? ($end_hour + 12) : $end_hour;
-
     $start_time = sprintf('%02d:%02d', $start_time, $start_minute);
     $end_time = sprintf('%02d:%02d', $end_time, $end_minute);
 
     // Update event details
-    $sql = "UPDATE events SET event_name = :event_name, event_date = :event_date, start_time = :start_time, end_time = :end_time, venue = :venue, ticket_price = :ticket_price, organizer_id = :organizer_id, genre = :genre WHERE event_id = :event_id";
+    $sql = "UPDATE events SET event_name = :event_name, event_date = :event_date, start_time = :start_time, end_time = :end_time, 
+    venue = :venue, ticket_price = :ticket_price, organizer_id = :organizer_id, genre = :genre WHERE event_id = :event_id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         'event_name' => $event_name,
@@ -72,6 +72,10 @@ $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-image: url('images/background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
         }
         label {
             display: block;
